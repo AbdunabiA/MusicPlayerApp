@@ -1,54 +1,64 @@
-import ReactJkMusicPlayer from "react-jinke-music-player";
-import music1 from "@/assets/music/2Pac, Big Syke – All Eyez On Me (Dj Belite Remix).mp3";
-import music2 from "@/assets/music/Adam – Zhurek Isko Alvarez remix.mp3";
-import music3 from "@/assets/music/Ed Sheeran – Shape of You.mp3";
-import music4 from "@/assets/music/Eminem – Mockingbird.mp3";
+import ReactJkMusicPlayer, {
+  ReactJkMusicPlayerAudioListProps,
+  ReactJkMusicPlayerInstance,
+} from "react-jinke-music-player";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { Slider } from "@/components/ui/slider";
+import { useRef, useState } from "react";
+import defImg from "@/assets/images/defaultMusicImg.jpg"
 
-const music = [
+const audioList1 = [
   {
-    musicSrc: music1,
-    name: "first",
-    singer: "2Pac, Big Syke",
+    name: "Despacito",
+    singer: "Luis Fonsi",
     cover:
       "http://res.cloudinary.com/alick/image/upload/v1502689731/Despacito_uvolhp.jpg",
-    remove: false,
+    musicSrc:
+      "http://res.cloudinary.com/alick/video/upload/v1502689683/Luis_Fonsi_-_Despacito_ft._Daddy_Yankee_uyvqw9.mp3",
+    // support async fetch music src. eg.
+    // musicSrc: async () => {
+    //   return await fetch('/api')
+    // },
   },
   {
-    musicSrc: music2,
-    name: "second",
-    singer: "Adam",
+    name: "Dorost Nemisham",
+    singer: "Sirvan Khosravi",
     cover:
       "https://res.cloudinary.com/ehsanahmadi/image/upload/v1573758778/Sirvan-Khosravi-Dorost-Nemisham_glicks.jpg",
-    remove: false,
-  },
-  {
-    musicSrc: music3,
-    name: "third",
-    singer: "Ed Sheeran",
-    cover:
-      "http://res.cloudinary.com/alick/image/upload/v1502375978/bedtime_stories_bywggz.jpg",
-    remove: false,
-  },
-  {
-    musicSrc: music4,
-    name: "fourth",
-    singer: "Eminem",
-    cover:
-      "http://res.cloudinary.com/alick/image/upload/v1502689731/Despacito_uvolhp.jpg",
-    remove: false,
+    musicSrc:
+      "https://res.cloudinary.com/ehsanahmadi/video/upload/v1573550770/Sirvan-Khosravi-Dorost-Nemisham-128_kb8urq.mp3",
   },
 ];
 
+interface TrackMetadata {
+  cover?: string | React.ReactNode;
+  name?: string | React.ReactNode;
+  singer?: string | React.ReactNode;
+  // Add any other properties you use in your audio lists
+}
+
 const Home = () => {
   const [mode, setMode] = useState<string>("mini");
-  const [progress, setProgress] = useState<{ current: number; all: number }>({
-    current: 0,
-    all: 0,
-  });
-  console.log(mode);
+  const [progress, setProgress] = useState<number>(0);
+  const [trackMetadata, setTrackMetadata] = useState<TrackMetadata>();
+  
+  const max = useRef(0)
+  const [audioInstance, setAudioInstance] =
+    useState<ReactJkMusicPlayerInstance | null>(null);
+
+  console.log(audioInstance?.currentTime);
+  function getInstance(audioInfo: ReactJkMusicPlayerInstance) {
+    setAudioInstance(audioInfo);
+    // setTrackMetadata({
+    //   cover: audioInfo.cover,
+    //   name: audioInfo.name,
+    //   singer: audioInfo.singer,
+    // });
+    // AudioINstace.currentTime = progress
+    // console.log('instance curr time',AudioINstace.currentTime);
+
+    // this.audioInstance = AudioINstace;
+    // console.log("AudioINstace", AudioINstace, this.audioInstance);
+  }
 
   return (
     <div className="container max-w-sm border-2 border-black relative">
@@ -56,26 +66,28 @@ const Home = () => {
       <ReactJkMusicPlayer
         mode={mode === "mini" ? "mini" : "full"}
         quietUpdate
-        audioLists={music}
+        audioLists={audioList1}
         responsive={true}
         autoHiddenCover={true}
         drag={false}
         autoPlay={false}
         showDownload={false}
         onModeChange={(mode) => setMode(mode)}
-        onAudioPlay={(audioplay) => console.log("audioPLay", audioplay)}
+        onAudioPlay={(audioInfo: ReactJkMusicPlayerAudioListProps) => {
+          setTrackMetadata({
+            cover: audioInfo.cover,
+            name: audioInfo.name,
+            singer: audioInfo.singer,
+          });
+          console.log("audioPLay", audioInfo);
+        }}
         onAudioPlayTrackChange={(trackChange) =>
           console.log("trackChange", trackChange)
         }
-        // getAudioInstance={(AudioINstace) => {
-        //   this.audioInstance = AudioINstace;
-        //   console.log("AudioINstace", AudioINstace, this.audioInstance);
-        // }}
+        getAudioInstance={getInstance}
         onAudioProgress={(audioProgress) => {
-          setProgress({
-            current: audioProgress.currentTime,
-            all: audioProgress.duration,
-          });
+          setProgress(audioProgress.currentTime);
+          max.current = audioProgress.duration;
           //   console.log("audioProgress", audioProgress);
         }}
         // showRemove={false}
@@ -85,15 +97,30 @@ const Home = () => {
           <input
             type="range"
             className="music-range"
-            value={progress.current}
-            max={progress.all}
+            max={max.current}
+            // defaultValue={progress.current[0]}
+            onChange={(e) => {
+              // currentTime.current = Number(e.target.value);
+              if (audioInstance?.currentTime) {
+                audioInstance.currentTime = Number(e.target.value);
+              }
+              setProgress(Number(e.target.value));
+              console.log(e.target.value);
+            }}
+            // min={0}
+            value={progress}
           />
+          <div>
+            <div>
+              <img src={defImg} alt="" />
+            </div>
+            <div>
+                <p>{trackMetadata?.singer}</p>
+                <p>{trackMetadata?.name}</p>
+            </div>
+          </div>
         </div>
       ) : null}
-
-      <div className="mt-10">
-        <Slider />
-      </div>
     </div>
   );
 };
