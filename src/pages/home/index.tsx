@@ -82,9 +82,18 @@ const Home = () => {
       />
       {mode === "mini" ? (
         <div>
-          <Slider defaultValue={[progress.current]} max={progress.all} step={4} />
+          <input
+            type="range"
+            className="music-range"
+            value={progress.current}
+            max={progress.all}
+          />
         </div>
       ) : null}
+
+      <div className="mt-10">
+        <Slider />
+      </div>
     </div>
   );
 };
