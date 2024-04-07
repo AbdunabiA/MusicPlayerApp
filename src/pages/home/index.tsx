@@ -34,11 +34,17 @@ const audioList = [
 ];
 
 interface TrackMetadata {
-  cover?: string | React.ReactNode;
+  cover?: string;
   name?: string | React.ReactNode;
   singer?: string | React.ReactNode;
   // Add any other properties you use in your audio lists
 }
+
+// interface ReactJkMusicPlayerInstance {
+//   playPrev: () => void;
+//   togglePlay: () => void;
+//   playNext: () => void;
+// }
 
 const Home = () => {
   const [mode, setMode] = useState<string>("mini");
@@ -93,10 +99,10 @@ const Home = () => {
       />
       {mode === "mini" ? (
         <div
-          className="absolute bottom-0 left-0 w-full"
-          onClick={(e) => {
-            console.log(e.target.id);
-            if (e.target?.id !== "button") {
+          className="absolute bottom-0 left-0 w-full bg-blue-500 pb-1"
+          onClick={(e:React.MouseEvent) => {
+            console.log(e.target);
+            if (e.target instanceof HTMLElement && e.target?.id !== "button") {
               setMode("full");
             }
           }}
@@ -120,9 +126,9 @@ const Home = () => {
           />
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-2">
-              <div className="w-16 h-16 border-2 border-blue-500">
+              <div className={`w-16 h-16 border-2 bg-[url(${defImg})] bg-cover`}>
                 <img
-                  src={defImg}
+                  src={trackMetadata?.cover || defImg}
                   alt=""
                   className="object-cover  w-full h-full"
                 />
@@ -138,8 +144,8 @@ const Home = () => {
             <div className="flex items-center h-full">
               <button
                 onClick={() => {
-                  if (audioInstance) {
-                    audioInstance!.playPrev();
+                  if (audioInstance?.playPrev) {
+                    audioInstance.playPrev();
                   }
                 }}
                 id="button"
@@ -149,8 +155,8 @@ const Home = () => {
               </button>
               <button
                 onClick={() => {
-                  if (audioInstance) {
-                    audioInstance!.togglePlay();
+                  if (audioInstance?.togglePlay) {
+                    audioInstance.togglePlay();
                   }
                 }}
                 id="button"
@@ -164,12 +170,12 @@ const Home = () => {
               </button>
               <button
                 onClick={() => {
-                  if (audioInstance) {
+                  if (audioInstance?.playNext) {
                     audioInstance!.playNext();
                   }
                 }}
                 id="button"
-                className="border-2 h-full"
+                className="h-full"
               >
                 <NextSvg className="fill-black w-10 h-10" />
               </button>
