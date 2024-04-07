@@ -86,27 +86,6 @@
 
 .music-range{
   width: 100%;
- accent-color: rgb(14, 100, 249);
+ accent-color: rgb(14, 249, 65);
  height: 4px;
 }
-
-/* .music-range::-moz-range-thumb {
-  -webkit-appearance: none;
-  width: 25px;
-  height: 25px;
-  background: #c8ff00;
-  cursor: pointer;
-}
-.music-range::-webkit-slider-runnable-track{
-  -webkit-appearance: none;
-  height: 100%;
-  background-color: rgb(158, 58, 58);
-}
-.music-range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 25px;
-  height: 25px;
-  background: #04AA6D !important;
-  cursor: pointer;
-} */

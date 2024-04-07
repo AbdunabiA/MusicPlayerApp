@@ -5,8 +5,12 @@ import ReactJkMusicPlayer, {
 import { Button } from "@/components/ui/button";
 import { useRef, useState } from "react";
 import defImg from "@/assets/images/defaultMusicImg.jpg"
+import NextSvg from "@/assets/icons/next";
+import PrevSvg from "@/assets/icons/prev";
+import PlaySvg from "@/assets/icons/play";
+import PauseSvg from "@/assets/icons/pause";
 
-const audioList1 = [
+const audioList = [
   {
     name: "Despacito",
     singer: "Luis Fonsi",
@@ -40,35 +44,29 @@ const Home = () => {
   const [mode, setMode] = useState<string>("mini");
   const [progress, setProgress] = useState<number>(0);
   const [trackMetadata, setTrackMetadata] = useState<TrackMetadata>();
+  const [playing, setPlaying] = useState<boolean>(false)
   
   const max = useRef(0)
   const [audioInstance, setAudioInstance] =
     useState<ReactJkMusicPlayerInstance | null>(null);
 
-  console.log(audioInstance?.currentTime);
+  console.log('instace',audioInstance);
+
+
   function getInstance(audioInfo: ReactJkMusicPlayerInstance) {
     setAudioInstance(audioInfo);
-    // setTrackMetadata({
-    //   cover: audioInfo.cover,
-    //   name: audioInfo.name,
-    //   singer: audioInfo.singer,
-    // });
-    // AudioINstace.currentTime = progress
-    // console.log('instance curr time',AudioINstace.currentTime);
-
-    // this.audioInstance = AudioINstace;
-    // console.log("AudioINstace", AudioINstace, this.audioInstance);
   }
 
   return (
-    <div className="container max-w-sm border-2 border-black relative">
+    <div className="container max-w-sm border-2 border-black">
       <Button onClick={() => setMode("full")}>Shad cn</Button>
       <ReactJkMusicPlayer
         mode={mode === "mini" ? "mini" : "full"}
         quietUpdate
-        audioLists={audioList1}
+        audioLists={audioList}
         responsive={true}
         autoHiddenCover={true}
+        onAudioPause={() => setPlaying(false)}
         drag={false}
         autoPlay={false}
         showDownload={false}
@@ -79,6 +77,7 @@ const Home = () => {
             name: audioInfo.name,
             singer: audioInfo.singer,
           });
+          setPlaying(true);
           console.log("audioPLay", audioInfo);
         }}
         onAudioPlayTrackChange={(trackChange) =>
@@ -93,7 +92,16 @@ const Home = () => {
         // showRemove={false}
       />
       {mode === "mini" ? (
-        <div>
+        <div
+          className="absolute bottom-0 left-0 w-full"
+          onClick={(e) => {
+            console.log(e.target.id);
+            if (e.target?.id !== "button") {
+              setMode("full");
+            }
+          }}
+          id="canopen"
+        >
           <input
             type="range"
             className="music-range"
@@ -110,13 +118,61 @@ const Home = () => {
             // min={0}
             value={progress}
           />
-          <div>
-            <div>
-              <img src={defImg} alt="" />
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center gap-2">
+              <div className="w-16 h-16 border-2 border-blue-500">
+                <img
+                  src={defImg}
+                  alt=""
+                  className="object-cover  w-full h-full"
+                />
+              </div>
+              <div className="max-w-[110px]">
+                <p className="text-lg font-bold line-clamp-1">
+                  {trackMetadata?.name}
+                </p>
+                <p className="text-sm line-clamp-1">{trackMetadata?.singer}</p>
+              </div>
             </div>
-            <div>
-                <p>{trackMetadata?.singer}</p>
-                <p>{trackMetadata?.name}</p>
+
+            <div className="flex items-center h-full">
+              <button
+                onClick={() => {
+                  if (audioInstance) {
+                    audioInstance!.playPrev();
+                  }
+                }}
+                id="button"
+                className="h-full"
+              >
+                <PrevSvg className="fill-black w-10 h-10 rotate-180" />
+              </button>
+              <button
+                onClick={() => {
+                  if (audioInstance) {
+                    audioInstance!.togglePlay();
+                  }
+                }}
+                id="button"
+                className="h-full"
+              >
+                {playing ? (
+                  <PauseSvg className="fill-black w-10 h-10" />
+                ) : (
+                  <PlaySvg className="fill-black w-10 h-10" />
+                )}
+              </button>
+              <button
+                onClick={() => {
+                  if (audioInstance) {
+                    audioInstance!.playNext();
+                  }
+                }}
+                id="button"
+                className="border-2 h-full"
+              >
+                <NextSvg className="fill-black w-10 h-10" />
+              </button>
             </div>
           </div>
         </div>
