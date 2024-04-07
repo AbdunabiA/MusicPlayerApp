@@ -67,10 +67,10 @@ const Home = () => {
         onAudioPlayTrackChange={(trackChange) =>
           console.log("trackChange", trackChange)
         }
-        getAudioInstance={(AudioINstace) => {
-          this.audioInstance = AudioINstace;
-          console.log("AudioINstace", AudioINstace, this.audioInstance);
-        }}
+        // getAudioInstance={(AudioINstace) => {
+        //   this.audioInstance = AudioINstace;
+        //   console.log("AudioINstace", AudioINstace, this.audioInstance);
+        // }}
         onAudioProgress={(audioProgress) => {
           setProgress({
             current: audioProgress.currentTime,
