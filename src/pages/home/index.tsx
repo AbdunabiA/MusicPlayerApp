@@ -82,7 +82,7 @@ const Home = () => {
       />
       {mode === "mini" ? (
         <div>
-          <Slider value={[progress.current]} max={progress.all} step={4} />
+          <Slider defaultValue={[progress.current]} max={progress.all} step={4} />
         </div>
       ) : null}
     </div>
