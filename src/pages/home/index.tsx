@@ -19,10 +19,10 @@ const Home = memo(() => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   // const location = useLocation();
-  const [limit] = useState(searchParams.get("limit") || 10)
+  const [limit, setLimit] = useState<number>(Number(searchParams.get("limit")) || 10)
 
-  const { data, isRefetching } = useQuery({
-    queryKey: ["groups"],
+  const { data, isFetching, } = useQuery({
+    queryKey: ["groups", limit],
     queryFn: () => fetchData(`/top?offset=0&limit=${limit}`),
   });
 
@@ -49,6 +49,8 @@ const Home = memo(() => {
   }, [data, changeAudioList]);
 
   console.log("data", data);
+  
+  
 
   return (
     <div className="container max-w-md h-[100dvh] overflow-y-auto">
@@ -91,10 +93,12 @@ const Home = memo(() => {
                 pathname: "/",
                 search: `offset=0&limit=${Number(limit) + 10}`,
               });
+              setLimit(state=>state+10);
+              
             }}
-            disabled={isRefetching}
+            disabled={isFetching}
           >
-            {isRefetching ? "Loading" : "Еще"}
+            {isFetching ? "Loading" : "Еще"}
           </Button>
         </div>
       </div>
