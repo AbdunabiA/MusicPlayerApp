@@ -27,6 +27,8 @@ export interface TopMusic{
     title:string;
     preview:string;
     artists_id:string[];
+    music_name:string;
+    artist_name:string;
 }
 
 export interface AudioListState {

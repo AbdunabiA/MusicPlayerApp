@@ -27,7 +27,7 @@ const Layout: React.FC = () => {
   // changeAudioList(audioList)
 
   return (
-    <div className="bg-gradient-to-b from-sky-900 to-slate-800">
+    <div className="bg-gradient-to-b from-slate-900 to-blue-950">
       <Outlet />
       <MusicPlayer />
       <AlertDialogCustom />

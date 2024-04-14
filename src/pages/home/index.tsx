@@ -11,6 +11,8 @@ import { ReactJkMusicPlayerAudioListProps } from "react-jinke-music-player";
 import { memo, useEffect, useState } from "react";
 import { useAudioListStore } from "@/store";
 import AudioListRender from "@/components/audioList";
+import { Button } from "@/components/ui/button";
+import HomeSkeleton from "@/components/homeSkeleton";
 // import { Button } from "@/components/ui/button";
 const arr = [
   { albumType: "top", name: "Лучшая музыка", artist: null },
@@ -20,11 +22,12 @@ const arr = [
 const Home = memo(() => {
   const changeAudioList = useAudioListStore((state) => state.changeAudioList);
   const [searchParams] = useSearchParams();
+  const [searchinput, setSearchInput] = useState<string>('')
   // const navigate = useNavigate();
   // const location = useLocation();
   const [limit] = useState<number>(Number(searchParams.get("limit")) || 20)
 
-  const { data, } = useQuery({
+  const { data, isLoading} = useQuery({
     queryKey: ["groups", limit],
     queryFn: () => fetchData(`/news?offset=0&limit=${limit}`),
   });
@@ -36,12 +39,9 @@ const Home = memo(() => {
     const audios: ReactJkMusicPlayerAudioListProps[] | undefined = data?.map(
       (track) => {
         return {
-          name: track.title,
+          name: track.music_name,
           musicSrc: track.key,
-          singer: track?.artists_id?.reduce(
-            (acc: string, el) => acc + el + " ",
-            ""
-          ),
+          singer: track?.artist_name,
           cover: track?.preview,
           key: track.key,
         };
@@ -53,12 +53,20 @@ const Home = memo(() => {
 
   console.log("data", data);
   
-  
+  if(isLoading) return <HomeSkeleton/>
 
   return (
     <div className="container max-w-md h-[100dvh] overflow-y-auto">
-      <div className="py-3 w-full sticky top-0 bg-sky-900">
-        <Input placeholder="search" />
+      <div className="py-3 w-full sticky top-0 bg-slate-900 flex">
+        <Input
+          placeholder="search"
+          onChange={(e) => setSearchInput(e.target.value)}
+          className="bg-transparent p-4 text-gray-300 text-lg"
+        />
+        {
+          searchinput ? <Button variant={'default'}>Найти</Button> : null
+        }
+        
       </div>
       <div className="p-1 w-full">
         <p className="text-xl font-bold text-gray-200 mt-2">Альбомы</p>
@@ -74,8 +82,8 @@ const Home = memo(() => {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="w-32">
-                    <p className="font-semibold text-gray-200 text-md line-clamp-1">
+                  <div className="w-36 mt-2">
+                    <p className="font-semibold text-gray-200 text-lg line-clamp-1">
                       {el.name}
                     </p>
                     <p className="text-gray-500 line-clamp-1">{el.artist}</p>

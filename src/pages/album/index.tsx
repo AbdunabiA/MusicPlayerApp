@@ -1,4 +1,5 @@
 import { fetchData } from "@/api";
+import AlbumSkeleton from "@/components/albumSkeleton";
 import AudioListRender from "@/components/audioList";
 import { Button } from "@/components/ui/button";
 import { useAudioListStore } from "@/store";
@@ -17,7 +18,7 @@ const Album = () => {
   const { albumType } = useParams()
   const [limit] = useState<number>(Number(searchParams.get("limit")) || 20);
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["groups", limit],
     queryFn: () => fetchData(`/${albumType}?offset=0&limit=${limit}`),
   });
@@ -29,12 +30,9 @@ const Album = () => {
     const audios: ReactJkMusicPlayerAudioListProps[] | undefined = data?.map(
       (track) => {
         return {
-          name: track.title,
+          name: track.music_name,
           musicSrc: track.key,
-          singer: track?.artists_id?.reduce(
-            (acc: string, el) => acc + el + " ",
-            ""
-          ),
+          singer: track?.artist_name,
           cover: track?.preview,
           key: track.key,
         };
@@ -45,6 +43,8 @@ const Album = () => {
   }, [data, changeAudioList]);
 
   console.log("data", data);
+
+  if(isLoading) return <AlbumSkeleton/>
   return (
     <div className="container max-w-md h-[100dvh] overflow-y-auto pt-4">
       <Button onClick={()=>navigate('/')} variant='default'>Назад</Button>
