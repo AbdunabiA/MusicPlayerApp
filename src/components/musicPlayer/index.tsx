@@ -55,6 +55,8 @@ const MusicPlayer: React.FC = () => {
         // }}
         clearPriorAudioLists={true}
         onAudioError={async (error, currentPlayId, audioLists, audioInfo) => {
+          console.log(error, currentPlayId, audioLists);
+          
           if (audioInfo.musicSrc.length > 10) {
             let id = 0
             audioList.forEach((audio, i) => {
