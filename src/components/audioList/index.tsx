@@ -1,19 +1,20 @@
-import { useAudioInstanceStore, useAudioListStore } from '@/store';
+import { useAudioInstanceStore, useAudioListStore, useCurrentAudio } from '@/store';
 import defImg from "@/assets/images/defaultMusicImg.jpg";
 
 const AudioListRender = () => {
       const audioList = useAudioListStore((state) => state.audioList);
+      const currentAudio = useCurrentAudio(state => state.audio)
       const audioInstance = useAudioInstanceStore(
         (state) => state.audioInstance
       );
-
+      const playingIndex = useCurrentAudio(state=>state.audioIndex)
     // console.log("audioList", audioList);
   return (
     <>
       {audioList?.map((track, i) => {
         return (
           <div
-            className="flex items-center gap-4 h-8"
+            className={`flex items-center gap-4 overflow-hidden rounded-sm p-2 ${playingIndex === i && track.name === currentAudio?.name ? 'bg-slate-900' : 'bg-transparent'}`}
             key={track.key}
             onClick={() => {
               console.log("index", i);

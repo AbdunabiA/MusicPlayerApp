@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { AudioInstanceState, AudioListState, DialogProps } from './types'
+import { AudioInstanceState, AudioListState, CurrentAudioState, DialogProps } from './types'
 
 
 
@@ -19,4 +19,13 @@ export const useDialogStore = create<DialogProps>((set)=>({
     onClose:()=>set({isOpen:false}),
     playIndex:0,
     setIndex: (index) => set({ isOpen:true,playIndex:index})
+}))
+
+export const useCurrentAudio = create<CurrentAudioState>((set) => ({
+    audioIndex:0,
+    playing:false,
+    setIndex: (index) => set({ audioIndex:index}),
+    setPlaying:(playing) => set({playing:playing}),
+    audio:null,
+    setAudio:(audio) => set({ audio:audio})
 }))

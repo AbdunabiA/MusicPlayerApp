@@ -46,3 +46,12 @@ export interface DialogProps {
     playIndex:number;
     setIndex:(index:number) => void;
 }
+
+export interface CurrentAudioState {
+    audioIndex: number;
+    playing: boolean;
+    setIndex: (index:number) => void;
+    setPlaying: (playing:boolean) => void;
+    audio: ReactJkMusicPlayerAudioListProps | null;
+    setAudio: (audio: ReactJkMusicPlayerAudioListProps) => void;
+}

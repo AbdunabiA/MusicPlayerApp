@@ -5,7 +5,7 @@ import ReactJkMusicPlayer, {
 import { useRef, useState } from "react";
 import { TrackMetadata } from "@/types";
 import CustomMiniPlayer from "../customMiniPlayer";
-import { useAudioInstanceStore, useAudioListStore, useDialogStore } from "@/store";
+import { useAudioInstanceStore, useAudioListStore, useCurrentAudio, useDialogStore } from "@/store";
 import { fetchMusicUrl } from "@/api";
 
 
@@ -19,6 +19,8 @@ const MusicPlayer: React.FC = () => {
   const changeAudioInstance = useAudioInstanceStore(state => state.changeAudioInstance)
   const audioInstance = useAudioInstanceStore(state => state.audioInstance)
   const setIndex = useDialogStore(state => state.setIndex)
+  const setAudioIndex = useCurrentAudio(state => state.setIndex)
+  const setAudio = useCurrentAudio(state => state.setAudio)
   const max = useRef(0);
   // const [audioInstance, setAudioInstance] =
   //   useState<ReactJkMusicPlayerInstance | null>(null);
@@ -33,15 +35,17 @@ const MusicPlayer: React.FC = () => {
       <ReactJkMusicPlayer
         mode={mode === "mini" ? "mini" : "full"}
         preload={true}
+        seeked={true}
         glassBg={true}
         showPlay={true}
         quietUpdate={true}
         audioLists={audioList}
         responsive={true}
         remember={true}
+        // remove={true}
         spaceBar={true}
         loadAudioErrorPlayNext={false}
-        autoHiddenCover={true}
+        onPlayIndexChange={(i)=>setAudioIndex(i)}
         onBeforeAudioDownload={async (audioInfo) => {
           console.log("before download", audioInfo);
           if (audioInfo.musicSrc.length > 10)
@@ -56,14 +60,15 @@ const MusicPlayer: React.FC = () => {
         clearPriorAudioLists={true}
         onAudioError={async (error, currentPlayId, audioLists, audioInfo) => {
           console.log(error, currentPlayId, audioLists);
-          
+
           if (audioInfo.musicSrc.length > 10) {
-            let id = 0
+            let id = 0;
             audioList.forEach((audio, i) => {
-            if (audio.name === audioInfo.name) {
-              id = i+1;
-            }})
-            setIndex(id)
+              if (audio.name === audioInfo.name) {
+                id = i + 1;
+              }
+            });
+            setIndex(id);
             return;
           }
           const newUrl = await fetchMusicUrl(audioInfo.musicSrc);
@@ -76,15 +81,13 @@ const MusicPlayer: React.FC = () => {
             return audio;
           });
           await changeAudioList(newAudioList);
+          audioLists = newAudioList;
           if (audioInstance?.playByIndex) audioInstance.playByIndex(id);
         }}
         onAudioPause={() => setPlaying(false)}
         drag={false}
         autoPlay={false}
         showDownload={false}
-        onAudioReload={(info) => {
-          console.log("reload", info);
-        }}
         onModeChange={(mode) => setMode(mode)}
         onAudioPlay={(audioInfo: ReactJkMusicPlayerAudioListProps) => {
           setTrackMetadata({
@@ -93,8 +96,10 @@ const MusicPlayer: React.FC = () => {
             singer: audioInfo.singer,
           });
           setPlaying(true);
+          setAudio(audioInfo);
           console.log("audioPLay", audioInfo);
         }}
+        
         // onAudioPlayTrackChange={(trackChange) =>
         //   console.log("trackChange", trackChange)
         // }
@@ -104,7 +109,7 @@ const MusicPlayer: React.FC = () => {
           max.current = audioProgress.duration;
         }}
       />
-      
+
       {mode === "mini" ? (
         <CustomMiniPlayer
           setMode={setMode}
