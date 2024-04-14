@@ -51,7 +51,7 @@ const Home = memo(() => {
   console.log("data", data);
 
   return (
-    <div className="container max-w-md h-screen overflow-y-auto">
+    <div className="container max-w-md h-[100dvh] overflow-y-auto">
       <div className="py-3 w-full sticky top-0 bg-sky-900">
         <Input placeholder="search" />
       </div>
