@@ -22,7 +22,7 @@ const AudioListRender = () => {
               if (audioInstance?.playByIndex) audioInstance.playByIndex(i);
             }}
           >
-            <div className={`w-[8vh] h-[8vh] bg-[url(${defImg})] bg-cover`}>
+            <div className={`w-[10vh] h-[10vh] bg-[url(${defImg})] bg-cover`}>
               <img
                 src={track.cover || defImg}
                 alt=""

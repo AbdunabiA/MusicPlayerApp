@@ -88,7 +88,7 @@ const Home = memo(() => {
       </div>
       <div className="mt-4">
         <p className="text-xl font-bold text-gray-200 mt-2">Новые песни</p>
-        <div className="flex flex-col gap-4 mt-5 pb-36">
+        <div className="flex flex-col gap-1 mt-5 pb-36">
           <AudioListRender />
           {/* <Button
             onClick={() => {

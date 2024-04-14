@@ -1,15 +1,17 @@
 import { fetchData } from "@/api";
 import AudioListRender from "@/components/audioList";
+import { Button } from "@/components/ui/button";
 import { useAudioListStore } from "@/store";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { ReactJkMusicPlayerAudioListProps } from "react-jinke-music-player";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 
 const Album = () => {
   const changeAudioList = useAudioListStore((state) => state.changeAudioList);
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate()
   // const navigate = useNavigate();
   // const location = useLocation();
   const { albumType } = useParams()
@@ -45,12 +47,12 @@ const Album = () => {
   console.log("data", data);
   return (
     <div className="container max-w-md h-[100dvh] overflow-y-auto pt-4">
-      <Link to={"/"} className="text-gray-300 text-lg font-semibold">Назад</Link>
+      <Button onClick={()=>navigate('/')} variant='default'>Назад</Button>
       <div className="mt-4">
         <p className="text-xl font-bold text-gray-200 mt-2">
           {albumType === "top" ? "Лучшая музыка" : "Чарт музыка"}
         </p>
-        <div className="flex flex-col gap-4 mt-5 pb-36">
+        <div className="flex flex-col gap-1 mt-5 pb-36">
           <AudioListRender />
           {/* <Button
             onClick={() => {
