@@ -19,7 +19,7 @@ const CustomMiniPlayer:React.FC<MiniPlayerProps> = ({
 }) => {
   return (
     <div
-      className="absolute bottom-0 left-0 w-full bg-gradient-to-b from-gray-900 to-slate-900 pb-1"
+      className="fixed bottom-0 left-0 w-full bg-gradient-to-b from-gray-900 to-slate-900 pb-1"
       onClick={(e: React.MouseEvent) => {
         // console.log(e.target);
         if (e.target instanceof HTMLElement && e.target?.id !== "button") {
