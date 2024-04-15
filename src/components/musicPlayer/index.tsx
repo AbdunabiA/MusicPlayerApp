@@ -21,6 +21,7 @@ const MusicPlayer: React.FC = () => {
   const setIndex = useDialogStore(state => state.setIndex)
   const setAudioIndex = useCurrentAudio(state => state.setIndex)
   const setAudio = useCurrentAudio(state => state.setAudio)
+  const setLoading = useCurrentAudio(state => state.setLoading)
   const max = useRef(0);
   // const [audioInstance, setAudioInstance] =
   //   useState<ReactJkMusicPlayerInstance | null>(null);
@@ -47,12 +48,14 @@ const MusicPlayer: React.FC = () => {
         loadAudioErrorPlayNext={false}
         onPlayIndexChange={(i)=>setAudioIndex(i)}
         onBeforeAudioDownload={async (audioInfo) => {
+          setLoading(true);
           console.log("before download", audioInfo);
           if (audioInfo.musicSrc.length > 10)
             return { ...audioInfo, src: audioInfo.musicSrc };
           const newUrl = await fetchMusicUrl(audioInfo.musicSrc);
           if (newUrl) return { ...audioInfo, src: newUrl };
           return { ...audioInfo, src: audioInfo.musicSrc };
+
         }}
         // onAudioListsChange={(currentPlayId, audioLists, audioInfo) => {
         //   console.log("listChange", currentPlayId, audioLists, audioInfo);
@@ -60,7 +63,7 @@ const MusicPlayer: React.FC = () => {
         clearPriorAudioLists={true}
         onAudioError={async (error, currentPlayId, audioLists, audioInfo) => {
           console.log(error, currentPlayId, audioLists);
-
+          setLoading(true)
           if (audioInfo.musicSrc.length > 10) {
             let id = 0;
             audioList.forEach((audio, i) => {
@@ -81,8 +84,9 @@ const MusicPlayer: React.FC = () => {
             return audio;
           });
           await changeAudioList(newAudioList);
-          audioLists = newAudioList;
+          // audioLists = newAudioList;
           if (audioInstance?.playByIndex) audioInstance.playByIndex(id);
+          setLoading(false)
         }}
         
         onAudioPause={() => setPlaying(false)}

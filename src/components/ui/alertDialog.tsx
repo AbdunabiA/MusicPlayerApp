@@ -9,13 +9,18 @@ import {
   AlertDialogTitle,
   //   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useAudioInstanceStore, useDialogStore } from "@/store";
+import {
+  useAudioInstanceStore,
+  useCurrentAudio,
+  useDialogStore,
+} from "@/store";
 
 const AlertDialogCustom = () => {
   const isOpen = useDialogStore((state) => state.isOpen);
   const onClose = useDialogStore((state) => state.onClose);
   const audioInstance = useAudioInstanceStore((state) => state.audioInstance);
   const playIndex = useDialogStore((state) => state.playIndex);
+  const setLoading = useCurrentAudio((state) => state.setLoading);
   // console.log('isOpen', isOpen);
 
   return (
@@ -30,7 +35,12 @@ const AlertDialogCustom = () => {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="bg-slate-900 text-gray-300">
+          <AlertDialogCancel
+            className="bg-slate-900 text-gray-300"
+            onClick={() => {
+              setLoading(false);
+            }}
+          >
             Закрыть
           </AlertDialogCancel>
           <AlertDialogAction

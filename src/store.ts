@@ -23,9 +23,9 @@ export const useDialogStore = create<DialogProps>((set)=>({
 
 export const useCurrentAudio = create<CurrentAudioState>((set) => ({
     audioIndex:0,
-    playing:false,
+    loading:false,
     setIndex: (index) => set({ audioIndex:index}),
-    setPlaying:(playing) => set({playing:playing}),
+    setLoading:(loading) => set({loading:loading}),
     audio:null,
     setAudio:(audio) => set({ audio:audio})
 }))

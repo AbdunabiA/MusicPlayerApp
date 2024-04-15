@@ -51,9 +51,9 @@ export interface DialogProps {
 
 export interface CurrentAudioState {
     audioIndex: number;
-    playing: boolean;
+    loading: boolean;
     setIndex: (index:number) => void;
-    setPlaying: (playing:boolean) => void;
+    setLoading: (loading:boolean) => void;
     audio: ReactJkMusicPlayerAudioListProps | null;
     setAudio: (audio: ReactJkMusicPlayerAudioListProps) => void;
 }
