@@ -4,7 +4,7 @@ import AudioListRender from "@/components/audioList";
 import { Button } from "@/components/ui/button";
 import { useAudioListStore } from "@/store";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ReactJkMusicPlayerAudioListProps } from "react-jinke-music-player";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
@@ -14,13 +14,14 @@ const Album = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate()
   const { albumType } = useParams()
+  const buttonRef = useRef(null)
   const [limit, setLimit] = useState<number>(Number(searchParams.get("limit")) || 20);
 
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ["groups", limit],
     queryFn: () => fetchData(`/${albumType}?offset=0&limit=${limit}`),
   });
-
+  
   useEffect(() => {
     // console.log("isFetched", isFetchedAfterMount);
     console.log("DATA", data);
@@ -38,11 +39,16 @@ const Album = () => {
     );
     console.log("AUDIOS", audios);
     if (audios) changeAudioList(audios);
+    if (audios && audios?.length > 20 && buttonRef.current) {
+      const buttonElement = buttonRef.current as HTMLElement; // Type assertion
+
+      buttonElement.scrollIntoView({ behavior: "instant", block: "start" });
+    }
   }, [data, changeAudioList]);
 
   console.log("data", data);
 
-  if(isLoading) return <AlbumSkeleton/>
+  if(isLoading && limit === 20) return <AlbumSkeleton/>
   return (
     <div className="container max-w-md h-[100dvh] overflow-y-auto pt-4">
       <Button onClick={()=>navigate('/')} variant='default'>Назад</Button>
@@ -62,6 +68,7 @@ const Album = () => {
               
             }}
             disabled={isFetching}
+            ref={buttonRef}
           >
             {isFetching ? "Loading" : "Еще"}
           </Button>

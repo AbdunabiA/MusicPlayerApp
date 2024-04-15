@@ -8,7 +8,7 @@ import defImg from "@/assets/images/defaultMusicImg.jpg";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData} from "@/api";
 import { ReactJkMusicPlayerAudioListProps } from "react-jinke-music-player";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { useAudioListStore } from "@/store";
 import AudioListRender from "@/components/audioList";
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,7 @@ const Home = memo(() => {
   const [searchParams] = useSearchParams();
   const [searchinput, setSearchInput] = useState<string>("");
   const navigate = useNavigate();
-  // const location = useLocation();
+  const buttonRef = useRef(null);
   const [limit, setLimit] = useState<number>(Number(searchParams.get("limit")) || 20);
 
   const { data, isLoading, isFetching } = useQuery({
@@ -59,6 +59,14 @@ const Home = memo(() => {
           if (audios) {
             changeAudioList(audios);
           }
+          if (audios && audios?.length > 20 && buttonRef.current) {
+            const buttonElement = buttonRef.current as HTMLElement; // Type assertion
+
+            buttonElement.scrollIntoView({
+              behavior: "instant",
+              block: "start",
+            });
+          }
     }
 
 
@@ -91,7 +99,7 @@ const Home = memo(() => {
   console.log('searchData', searchData);
   
   
-  if (isLoading) return <HomeSkeleton/>;
+  if (isLoading && limit === 20) return <HomeSkeleton/>;
 
   return (
     <div className="container max-w-md h-[100dvh] overflow-y-auto">
@@ -158,6 +166,7 @@ const Home = memo(() => {
               
             }}
             disabled={isFetching}
+            ref={buttonRef}
           >
             {isFetching ? "Loading" : "Еще"}
           </Button>
