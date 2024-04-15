@@ -96,7 +96,7 @@ const Home = memo(() => {
 
   return (
     <div className="container max-w-md h-[100dvh] overflow-y-auto">
-      <div className="py-3 w-full sticky top-0 bg-slate-900 flex">
+      <div className="py-3 w-full sticky top-0 z-10 bg-slate-900 flex">
         <Input
           placeholder="search"
           onChange={(e) => setSearchInput(e.target.value)}

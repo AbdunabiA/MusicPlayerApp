@@ -16,7 +16,7 @@ const AudioListRender = () => {
       {audioList?.map((track, i) => {
         return (
           <div
-            className={`flex items-center gap-4 overflow-hidden rounded-sm p-2 relative ${
+            className={`flex items-center gap-4 overflow-hidden rounded-sm p-2 relative z-0 ${
               loading && playingIndex === i
                 ? "bg-slate-900 opacity-50"
                 : ""
