@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import {
   Link,
-  // useNavigate,
+  useNavigate,
   useSearchParams,
 } from "react-router-dom";
 import defImg from "@/assets/images/defaultMusicImg.jpg";
@@ -14,7 +14,6 @@ import AudioListRender from "@/components/audioList";
 import { Button } from "@/components/ui/button";
 import HomeSkeleton from "@/components/homeSkeleton";
 import AlbumSkeleton from "@/components/albumSkeleton";
-// import { Button } from "@/components/ui/button";
 const arr = [
   { albumType: "top", name: "Лучшая музыка", artist: null },
   { albumType: "chart", name: "Чарт музыка", artist: null },
@@ -24,11 +23,11 @@ const Home = memo(() => {
   const changeAudioList = useAudioListStore((state) => state.changeAudioList);
   const [searchParams] = useSearchParams();
   const [searchinput, setSearchInput] = useState<string>("");
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   // const location = useLocation();
-  const [limit] = useState<number>(Number(searchParams.get("limit")) || 20);
+  const [limit, setLimit] = useState<number>(Number(searchParams.get("limit")) || 20);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isFetching } = useQuery({
     queryKey: ["groups", limit],
     queryFn: () => fetchData(`/news?offset=0&limit=${limit}`),
   });
@@ -149,7 +148,7 @@ const Home = memo(() => {
             <p className="text-xl font-bold text-gray-200 mt-2">Новые песни</p>
             <div className="flex flex-col gap-1 mt-5 pb-36">
               <AudioListRender />
-              {/* <Button
+              <Button
             onClick={() => {
               navigate({
                 pathname: "/",
@@ -161,7 +160,7 @@ const Home = memo(() => {
             disabled={isFetching}
           >
             {isFetching ? "Loading" : "Еще"}
-          </Button> */}
+          </Button>
             </div>
           </div>
         </>

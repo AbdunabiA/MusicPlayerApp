@@ -13,12 +13,10 @@ const Album = () => {
   const changeAudioList = useAudioListStore((state) => state.changeAudioList);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate()
-  // const navigate = useNavigate();
-  // const location = useLocation();
   const { albumType } = useParams()
-  const [limit] = useState<number>(Number(searchParams.get("limit")) || 20);
+  const [limit, setLimit] = useState<number>(Number(searchParams.get("limit")) || 20);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isFetching } = useQuery({
     queryKey: ["groups", limit],
     queryFn: () => fetchData(`/${albumType}?offset=0&limit=${limit}`),
   });
@@ -54,7 +52,7 @@ const Album = () => {
         </p>
         <div className="flex flex-col gap-1 mt-5 pb-36">
           <AudioListRender />
-          {/* <Button
+          <Button
             onClick={() => {
               navigate({
                 pathname: "/",
@@ -66,7 +64,7 @@ const Album = () => {
             disabled={isFetching}
           >
             {isFetching ? "Loading" : "Еще"}
-          </Button> */}
+          </Button>
         </div>
       </div>
     </div>
