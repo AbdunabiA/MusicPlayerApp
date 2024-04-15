@@ -1,12 +1,8 @@
 import { Input } from "@/components/ui/input";
-import {
-  Link,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import defImg from "@/assets/images/defaultMusicImg.jpg";
-import { useQuery } from "@tanstack/react-query";
-import { fetchData} from "@/api";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchData } from "@/api";
 import { ReactJkMusicPlayerAudioListProps } from "react-jinke-music-player";
 import { memo, useEffect, useRef, useState } from "react";
 import { useAudioListStore } from "@/store";
@@ -14,6 +10,7 @@ import AudioListRender from "@/components/audioList";
 import { Button } from "@/components/ui/button";
 import HomeSkeleton from "@/components/homeSkeleton";
 import AlbumSkeleton from "@/components/albumSkeleton";
+import { TopMusic } from "@/types";
 const arr = [
   { albumType: "top", name: "Лучшая музыка", artist: null },
   { albumType: "chart", name: "Чарт музыка", artist: null },
@@ -25,11 +22,15 @@ const Home = memo(() => {
   const [searchinput, setSearchInput] = useState<string>("");
   const navigate = useNavigate();
   const buttonRef = useRef(null);
-  const [limit, setLimit] = useState<number>(Number(searchParams.get("limit")) || 20);
+  // const [limit, setLimit] = useState<number>(Number(searchParams.get("limit")) || 10);
+  // const [offset, setOffset] = useState<number>(
+  //   Number(searchParams.get("offset")) || 0
+  // );
+  const queryClient = useQueryClient();
 
   const { data, isLoading, isFetching } = useQuery({
-    queryKey: ["groups", limit],
-    queryFn: () => fetchData(`/news?offset=0&limit=${limit}`),
+    queryKey: ["newMusic"],
+    queryFn: () => fetchData(`/news?offset=0&limit=20`),
   });
 
   const {
@@ -42,64 +43,81 @@ const Home = memo(() => {
     enabled: false,
   });
 
+  const getMoreAudio = async () => {
+    const data = await fetchData(
+      `/news?offset=${Number(searchParams.get("limit"))}&limit=${
+        Number(searchParams.get("limit")) + 10
+      }`
+    );
+    queryClient.setQueryData(["newMusic"], (oldData: TopMusic[]) => {
+      if (data) {
+        return [...oldData, ...data];
+      }
+    });
+    // console.log('offset limit',data);
+  };
+
   useEffect(() => {
     // console.log("isFetched", isFetchedAfterMount);
     console.log("DATA", data);
-    if(!searchinput){
-          const audios: ReactJkMusicPlayerAudioListProps[] | undefined =
-            data?.map((track) => {
-              return {
-                name: track.music_name,
-                musicSrc: track.key,
-                singer: track?.artist_name,
-                cover: track?.preview,
-                key: track.key,
-              };
-            });
-          if (audios) {
-            changeAudioList(audios);
-          }
-          if (audios && audios?.length > 20 && buttonRef.current) {
-            const buttonElement = buttonRef.current as HTMLElement; // Type assertion
+    if (!searchinput) {
+      const audios: ReactJkMusicPlayerAudioListProps[] | undefined = data?.map(
+        (track) => {
+          return {
+            name: track.music_name,
+            musicSrc: track.key,
+            singer: track?.artist_name,
+            cover: track?.preview,
+            key: track.key,
+          };
+        }
+      );
+      if (audios) {
+        changeAudioList(audios);
+      }
+      if (audios && audios?.length > 20 && buttonRef.current) {
+        const buttonElement = buttonRef.current as HTMLElement; // Type assertion
 
-            buttonElement.scrollIntoView({
-              behavior: "instant",
-              block: "start",
-            });
-          }
+        buttonElement.scrollIntoView({
+          behavior: "instant",
+          block: "start",
+        });
+      }
     }
-
+    if (!searchParams.get("offset")) {
+      navigate({
+        pathname: "/",
+        search: `offset=0&limit=20`,
+      });
+    }
 
     // console.log("AUDIOS", audios);
   }, [data, changeAudioList, searchinput]);
 
-
-    useEffect(() => {
-      // console.log("isFetched", isFetchedAfterMount);
-      // console.log("DATA", data);
-      if(searchinput){
-        const audios: ReactJkMusicPlayerAudioListProps[] | undefined =
-          searchData?.map((track) => {
-            return {
-              name: track.music_name,
-              musicSrc: track.key,
-              singer: track?.artist_name,
-              cover: track?.preview,
-              key: track.key,
-            };
-          });
-        console.log("AUDIOS", audios);
-        if (audios) changeAudioList(audios);
-      }
-
-      
-    }, [searchData, changeAudioList, searchinput]);
+  useEffect(() => {
+    // console.log("isFetched", isFetchedAfterMount);
+    // console.log("DATA", data);
+    if (searchinput) {
+      const audios: ReactJkMusicPlayerAudioListProps[] | undefined =
+        searchData?.map((track) => {
+          return {
+            name: track.music_name,
+            musicSrc: track.key,
+            singer: track?.artist_name,
+            cover: track?.preview,
+            key: track.key,
+          };
+        });
+      console.log("AUDIOS", audios);
+      if (audios) changeAudioList(audios);
+    }
+  }, [searchData, changeAudioList, searchinput]);
 
   console.log("data", data);
-  console.log('searchData', searchData);
-  
-  
-  if (isLoading && limit === 20) return <HomeSkeleton/>;
+  console.log("searchData", searchData);
+
+  if (isLoading && Number(searchParams.get("limit")) === 20)
+    return <HomeSkeleton />;
 
   return (
     <div className="container max-w-md h-[100dvh] overflow-y-auto">
@@ -117,7 +135,7 @@ const Home = memo(() => {
         ) : null}
       </div>
       {isSearching ? (
-        <AlbumSkeleton/>
+        <AlbumSkeleton />
       ) : (
         <>
           <div className="p-1 w-full">
@@ -157,19 +175,20 @@ const Home = memo(() => {
             <div className="flex flex-col gap-1 mt-5 pb-36">
               <AudioListRender />
               <Button
-            onClick={() => {
-              navigate({
-                pathname: "/",
-                search: `offset=0&limit=${Number(limit) + 10}`,
-              });
-              setLimit(state=>state+10);
-              
-            }}
-            disabled={isFetching}
-            ref={buttonRef}
-          >
-            {isFetching ? "Loading" : "Еще"}
-          </Button>
+                onClick={() => {
+                  navigate({
+                    pathname: "/",
+                    search: `offset=${Number(
+                      searchParams.get("limit")
+                    )}&limit=${Number(searchParams.get("limit")) + 10}`,
+                  });
+                  getMoreAudio();
+                }}
+                disabled={isFetching}
+                ref={buttonRef}
+              >
+                {isFetching ? "Loading" : "Еще"}
+              </Button>
             </div>
           </div>
         </>
