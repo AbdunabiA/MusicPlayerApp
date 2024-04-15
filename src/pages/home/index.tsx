@@ -59,7 +59,6 @@ const Home = memo(() => {
             });
           if (audios) {
             changeAudioList(audios);
-            searchData?.splice(0)
           }
     }
 
@@ -71,21 +70,23 @@ const Home = memo(() => {
     useEffect(() => {
       // console.log("isFetched", isFetchedAfterMount);
       // console.log("DATA", data);
+      if(searchinput){
+        const audios: ReactJkMusicPlayerAudioListProps[] | undefined =
+          searchData?.map((track) => {
+            return {
+              name: track.music_name,
+              musicSrc: track.key,
+              singer: track?.artist_name,
+              cover: track?.preview,
+              key: track.key,
+            };
+          });
+        console.log("AUDIOS", audios);
+        if (audios) changeAudioList(audios);
+      }
 
-      const audios: ReactJkMusicPlayerAudioListProps[] | undefined = searchData?.map(
-        (track) => {
-          return {
-            name: track.music_name,
-            musicSrc: track.key,
-            singer: track?.artist_name,
-            cover: track?.preview,
-            key: track.key,
-          };
-        }
-      );
-      console.log("AUDIOS", audios);
-      if (audios) changeAudioList(audios);
-    }, [searchData, changeAudioList]);
+      
+    }, [searchData, changeAudioList, searchinput]);
 
   console.log("data", data);
   console.log('searchData', searchData);
