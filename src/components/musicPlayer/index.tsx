@@ -84,6 +84,7 @@ const MusicPlayer: React.FC = () => {
           audioLists = newAudioList;
           if (audioInstance?.playByIndex) audioInstance.playByIndex(id);
         }}
+        
         onAudioPause={() => setPlaying(false)}
         drag={false}
         autoPlay={false}

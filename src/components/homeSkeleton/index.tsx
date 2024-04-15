@@ -4,9 +4,9 @@ const arr = [1, 2,3, 4, 5, 6]
 const HomeSkeleton = () => {
   return (
     <div className="container max-w-md h-[100dvh] overflow-y-auto">
-      <div className="py-3 w-full sticky top-0 bg-slate-900 flex">
-        <Skeleton className="w-full h-5" />
-      </div>
+        <div className="py-3 w-full sticky top-0 bg-slate-900 flex">
+          <Skeleton className="w-full h-5" />
+        </div>
       <div className="p-1 w-full">
         <Skeleton className="mt-2 w-44 h-5" />
         <div className="flex gap-2 mt-3 w-full overflow-x-auto">
