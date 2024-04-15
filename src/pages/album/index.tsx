@@ -55,7 +55,7 @@ const Album = () => {
           <Button
             onClick={() => {
               navigate({
-                pathname: `/${albumType}?offset=0&limit=${limit}`,
+                pathname: `/album/${albumType}`,
                 search: `offset=0&limit=${Number(limit) + 10}`,
               });
               setLimit(state=>state+10);
