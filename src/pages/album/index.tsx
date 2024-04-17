@@ -39,7 +39,7 @@ const Album = () => {
 
   useEffect(() => {
     // console.log("isFetched", isFetchedAfterMount);
-    console.log("DATA", data);
+    // console.log("DATA", data);
 
     const audios: ReactJkMusicPlayerAudioListProps[] | undefined = data?.map(
       (track) => {
@@ -52,7 +52,7 @@ const Album = () => {
         };
       }
     );
-    console.log("AUDIOS", audios);
+    // console.log("AUDIOS", audios);
     if (audios) changeAudioList(audios);
     if (audios && audios?.length > 20 && buttonRef.current) {
       const buttonElement = buttonRef.current as HTMLElement; // Type assertion
@@ -68,7 +68,7 @@ const Album = () => {
     }
   }, [data, changeAudioList]);
 
-  console.log("data", data);
+  // console.log("data", data);
 
   if (isLoading && Number(searchParams.get("limit")) === 20)
     return <AlbumSkeleton />;

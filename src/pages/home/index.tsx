@@ -22,17 +22,14 @@ const Home = memo(() => {
   const [searchinput, setSearchInput] = useState<string>("");
   const navigate = useNavigate();
   const buttonRef = useRef(null);
-  // const [limit, setLimit] = useState<number>(Number(searchParams.get("limit")) || 10);
-  // const [offset, setOffset] = useState<number>(
-  //   Number(searchParams.get("offset")) || 0
-  // );
   const queryClient = useQueryClient();
 
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ["newMusic"],
     queryFn: () => fetchData(`/news?offset=0&limit=20`),
   });
-
+  // console.log('home useQuery data', data);
+  
   const {
     data: searchData,
     refetch,
@@ -59,7 +56,7 @@ const Home = memo(() => {
 
   useEffect(() => {
     // console.log("isFetched", isFetchedAfterMount);
-    console.log("DATA", data);
+    // console.log("DATA", data);
     if (!searchinput) {
       const audios: ReactJkMusicPlayerAudioListProps[] | undefined = data?.map(
         (track) => {
@@ -108,13 +105,13 @@ const Home = memo(() => {
             key: track.key,
           };
         });
-      console.log("AUDIOS", audios);
+      // console.log("AUDIOS", audios);
       if (audios) changeAudioList(audios);
     }
   }, [searchData, changeAudioList, searchinput]);
 
-  console.log("data", data);
-  console.log("searchData", searchData);
+  // console.log("data", data);
+  // console.log("searchData", searchData);
 
   if (isLoading && Number(searchParams.get("limit")) === 20)
     return <HomeSkeleton />;

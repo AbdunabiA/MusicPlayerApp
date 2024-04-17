@@ -49,7 +49,7 @@ const MusicPlayer: React.FC = () => {
         onPlayIndexChange={(i)=>setAudioIndex(i)}
         onBeforeAudioDownload={async (audioInfo) => {
           setLoading(true);
-          console.log("before download", audioInfo);
+          // console.log("before download", audioInfo);
           if (audioInfo.musicSrc.length > 10)
             return { ...audioInfo, src: audioInfo.musicSrc };
           const newUrl = await fetchMusicUrl(audioInfo.musicSrc);
@@ -83,6 +83,10 @@ const MusicPlayer: React.FC = () => {
             }
             return audio;
           });
+          if(newUrl === 'error'){
+            setIndex(id+1)
+            return
+          }
           await changeAudioList(newAudioList);
           // audioLists = newAudioList;
           if (audioInstance?.playByIndex) audioInstance.playByIndex(id);
@@ -102,7 +106,7 @@ const MusicPlayer: React.FC = () => {
           });
           setPlaying(true);
           setAudio(audioInfo);
-          console.log("audioPLay", audioInfo);
+          // console.log("audioPLay", audioInfo);
         }}
         
         // onAudioPlayTrackChange={(trackChange) =>
