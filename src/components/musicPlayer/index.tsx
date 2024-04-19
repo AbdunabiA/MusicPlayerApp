@@ -76,7 +76,7 @@ const MusicPlayer: React.FC = () => {
           }
           const newUrl = await fetchMusicUrl(audioInfo.musicSrc);
           let id = 0;
-          const newAudioList = await audioList.map((audio, i) => {
+          const newAudioList = audioList.map((audio, i) => {
             if (audio.name === audioInfo.name && newUrl) {
               id = i;
               return { ...audio, musicSrc: newUrl };
@@ -87,7 +87,7 @@ const MusicPlayer: React.FC = () => {
             setIndex(id+1)
             return
           }
-          await changeAudioList(newAudioList);
+          changeAudioList(newAudioList);
           // audioLists = newAudioList;
           if (audioInstance?.playByIndex) audioInstance.playByIndex(id);
           setLoading(false)

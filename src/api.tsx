@@ -4,7 +4,6 @@ import { TopMusic } from "./types";
 const api = axios.create({ baseURL: import.meta.env.VITE_API_URL });
 
 export const fetchData = async (url: string): Promise<TopMusic[]> => {
-  // const tokens = await fetchTokens();
   let token = ''
   const sessionData = sessionStorage.getItem("tokens");
   if (sessionData) {
@@ -26,7 +25,6 @@ export const fetchData = async (url: string): Promise<TopMusic[]> => {
 export const fetchMusicUrl = async (
   url: string
 ): Promise<string | undefined> => {
-  // const tokens = await fetchTokens();
   let token = "";
   const sessionData = sessionStorage.getItem("tokens");
   if (sessionData) {
