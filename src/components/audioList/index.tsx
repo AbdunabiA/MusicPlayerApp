@@ -37,7 +37,10 @@ const AudioListRender = () => {
 
             <div className={`w-[10vh] h-[10vh] bg-[url(${defImg})] bg-cover`}>
               <img
-                src={track.cover || "./defaultMusicImg.jpg"}
+                src={
+                  track.cover ||
+                  "https://cdn.pixabay.com/photo/2016/05/16/00/10/music-1394747_640.jpg"
+                }
                 alt=""
                 className="object-cover  w-full h-full"
               />

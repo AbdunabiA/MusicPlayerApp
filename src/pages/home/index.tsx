@@ -148,7 +148,9 @@ const Home = memo(() => {
                             className={`h-32 w-36 bg-[url(${defImg})] bg-cover`}
                           >
                             <img
-                              src={"./defaultMusicImg.jpg"}
+                              src={
+                                "https://cdn.pixabay.com/photo/2016/05/16/00/10/music-1394747_640.jpg"
+                              }
                               alt="img"
                               className="w-full h-full object-cover"
                             />
