@@ -44,11 +44,9 @@ const CustomMiniPlayer:React.FC<MiniPlayerProps> = ({
         />
         <div className="flex items-center justify-between h-[10vh]">
           <div className="flex items-center gap-2">
-            <div
-              className={`w-[10vh] h-[10vh] bg-[url(${defImg})] bg-cover`}
-            >
+            <div className={`w-[10vh] h-[10vh] bg-[url(${defImg})] bg-cover`}>
               <img
-                src={trackMetadata?.cover || defImg}
+                src={trackMetadata?.cover || "./defaultMusicImg.jpg"}
                 alt=""
                 className="object-cover  w-full h-full"
               />

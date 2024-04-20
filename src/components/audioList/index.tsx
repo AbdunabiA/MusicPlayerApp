@@ -17,9 +17,7 @@ const AudioListRender = () => {
         return (
           <div
             className={`flex items-center gap-4 overflow-hidden rounded-sm p-2 relative z-0 ${
-              loading && playingIndex === i
-                ? "bg-slate-900 opacity-50"
-                : ""
+              loading && playingIndex === i ? "bg-slate-900 opacity-50" : ""
             } ${
               playingIndex === i && track.name === currentAudio?.name
                 ? "bg-slate-900"
@@ -29,16 +27,17 @@ const AudioListRender = () => {
             onClick={() => {
               console.log("index", i);
               console.log("loading", loading);
-              
+
               if (audioInstance?.playByIndex) audioInstance.playByIndex(i);
             }}
           >
-            
-            {loading && playingIndex === i ? <LoadingSpinner className="absolute left-[48%] top-[48%] stroke-gray-200" /> : null}
-            
+            {loading && playingIndex === i ? (
+              <LoadingSpinner className="absolute left-[48%] top-[48%] stroke-gray-200" />
+            ) : null}
+
             <div className={`w-[10vh] h-[10vh] bg-[url(${defImg})] bg-cover`}>
               <img
-                src={track.cover || defImg}
+                src={track.cover || "./defaultMusicImg.jpg"}
                 alt=""
                 className="object-cover  w-full h-full"
               />
