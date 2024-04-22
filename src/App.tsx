@@ -3,14 +3,14 @@ import Home from "./pages/home";
 import Album from "./pages/album";
 import Layout from "./components/layout";
 // import { useQuery } from "@tanstack/react-query";
-import { fetchTokens } from "./api";
+// import { fetchTokens } from "./api";
 import { useEffect } from "react";
 
 function App() {
   useEffect(()=>{
-    const tokens = fetchTokens()
+    // const tokens = fetchTokens()
     // const tokens = ['', '',]
-    sessionStorage.setItem("tokens", JSON.stringify(tokens));
+    sessionStorage.setItem("tokens", JSON.stringify([]));
   },[])
   
   return (

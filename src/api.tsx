@@ -8,14 +8,10 @@ export const fetchData = async (url: string): Promise<TopMusic[]> => {
   const sessionData = sessionStorage.getItem("tokens");
   if (sessionData) {
     let tokens = JSON.parse(sessionData);
-    if(!tokens.length){
+    if(!tokens?.length || !tokens){
       tokens = await fetchTokens();
     }
-    // console.log("fetch data tokens", tokens);
-
     token = tokens[0];
-    // console.log("fetch data token", token);
-    // console.log("fetch data tokens spliced", tokens.slice(1));
     sessionStorage.setItem("tokens", JSON.stringify(tokens.slice(1)));
   }
 
@@ -29,7 +25,7 @@ export const fetchMusicUrl = async (
   const sessionData = sessionStorage.getItem("tokens");
   if (sessionData) {
     let tokens = JSON.parse(sessionData);
-    if (!tokens.length) {
+    if (!tokens?.length || !tokens) {
       tokens = await fetchTokens();
     }
     // console.log("fetch data tokens", tokens);
